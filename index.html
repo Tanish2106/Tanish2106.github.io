@@ -1,0 +1,1105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="color-scheme" content="light dark" />
+<title>Tanish Anandababu — Vol. I</title>
+<meta name="description" content="Tanish Anandababu. Software engineer. Researcher. An editorial profile." />
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Source+Serif+4:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@300;400;500&display=swap');
+
+  :root {
+    --paper: #f4f1ea;
+    --ink: #111111;
+    --paper-dim: #e6e2d9;
+    --ink-dim: #1a1a1a;
+    --ghost-light: rgba(17, 17, 17, 0.06);
+    --ghost-dark: rgba(244, 241, 234, 0.075);
+    --hair-light: rgba(17, 17, 17, 0.18);
+    --hair-dark: rgba(244, 241, 234, 0.22);
+
+    --serif-display: 'Playfair Display', 'Times New Roman', serif;
+    --serif-body: 'Source Serif 4', Georgia, serif;
+    --mono: 'IBM Plex Mono', ui-monospace, Menlo, monospace;
+
+    --page-count: 8;
+    --page: 0;
+    --ease: cubic-bezier(0.77, 0, 0.175, 1);
+    --dur: 700ms;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--paper);
+    color: var(--ink);
+    overflow: hidden;
+    overscroll-behavior: none;
+    font-family: var(--serif-body);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    /* safe-area awareness for notched devices */
+    padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+  }
+
+  .book {
+    position: relative;
+    display: flex;
+    flex-wrap: nowrap;
+    width: calc(var(--page-count) * 100vw);
+    height: 100vh;
+    transform: translate3d(calc(var(--page) * -100vw), 0, 0);
+    transition: transform var(--dur) var(--ease);
+    will-change: transform;
+    touch-action: none;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .book { transition: none; }
+  }
+
+  .page {
+    position: relative;
+    flex: 0 0 100vw;
+    width: 100vw;
+    height: 100vh;
+    padding: 7vh 6vw 10vh;
+    overflow: hidden;
+    background: var(--paper);
+    color: var(--ink);
+    display: flex;
+    flex-direction: column;
+  }
+
+  .page.dark {
+    background: var(--ink);
+    color: var(--paper);
+  }
+
+  /* Ghost page number */
+  .ghost {
+    position: absolute;
+    left: -2vw;
+    bottom: 2.5vh;
+    font-family: var(--serif-display);
+    font-weight: 700;
+    font-size: clamp(220px, 28vw, 420px);
+    line-height: 0.82;
+    letter-spacing: -0.04em;
+    color: var(--ghost-light);
+    user-select: none;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .page.dark .ghost { color: var(--ghost-dark); }
+
+  /* Shared meta typography */
+  .meta {
+    font-family: var(--mono);
+    font-weight: 400;
+    font-size: clamp(11px, 0.88vw, 13px);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    opacity: 0.72;
+  }
+  .meta.quiet { opacity: 0.55; }
+  .meta.loud { opacity: 0.9; }
+
+  .section-tag {
+    font-family: var(--mono);
+    font-size: clamp(10px, 0.8vw, 12px);
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    opacity: 0.78;
+    margin-bottom: 2.4vh;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.9em;
+  }
+  .section-tag::after {
+    content: '';
+    display: inline-block;
+    width: 3.2em;
+    height: 1px;
+    background: currentColor;
+    opacity: 0.5;
+  }
+
+  /* Running header on every page */
+  .runner {
+    position: absolute;
+    top: 3.2vh;
+    left: 6vw;
+    right: 6vw;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    z-index: 3;
+  }
+  .runner .l,
+  .runner .c,
+  .runner .r {
+    font-family: var(--mono);
+    font-size: clamp(10px, 0.78vw, 12px);
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    opacity: 0.6;
+  }
+  .runner .c { text-align: center; }
+  .runner .r { text-align: right; }
+
+  /* Hairline */
+  .hair {
+    height: 1px;
+    background: var(--hair-light);
+    width: 100%;
+  }
+  .page.dark .hair { background: var(--hair-dark); }
+
+  /* ============ COVER ============ */
+  .cover {
+    justify-content: flex-end;
+  }
+  .cover-mark {
+    position: absolute;
+    top: 3.2vh;
+    left: 6vw;
+    font-family: var(--mono);
+    font-size: clamp(10px, 0.78vw, 12px);
+    letter-spacing: 0.28em;
+    opacity: 0.6;
+    text-transform: uppercase;
+  }
+  .cover-mark-right {
+    position: absolute;
+    top: 3.2vh;
+    right: 6vw;
+    font-family: var(--mono);
+    font-size: clamp(10px, 0.78vw, 12px);
+    letter-spacing: 0.28em;
+    opacity: 0.6;
+    text-transform: uppercase;
+    text-align: right;
+  }
+  .nameplate {
+    font-family: var(--serif-display);
+    font-weight: 600;
+    font-size: clamp(68px, 11vw, 184px);
+    line-height: 0.94;
+    letter-spacing: -0.028em;
+    margin: 0 0 3.2vh;
+  }
+  .nameplate .break { display: block; }
+  .descriptor {
+    font-family: var(--serif-body);
+    font-style: italic;
+    font-weight: 400;
+    font-size: clamp(22px, 2.4vw, 40px);
+    line-height: 1.25;
+    opacity: 0.86;
+    max-width: 18ch;
+    margin: 0 0 7vh;
+  }
+  .cover-rule {
+    width: 34vw;
+    max-width: 520px;
+    height: 1px;
+    background: currentColor;
+    opacity: 0.45;
+    margin-bottom: 3vh;
+  }
+  .cover-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 0.9em;
+    font-family: var(--mono);
+    font-size: clamp(11px, 0.95vw, 14px);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    opacity: 0.78;
+  }
+  .cover-foot {
+    position: absolute;
+    bottom: 3.4vh;
+    right: 6vw;
+    font-family: var(--mono);
+    font-size: clamp(10px, 0.78vw, 12px);
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    opacity: 0.58;
+    display: flex;
+    align-items: center;
+    gap: 0.9em;
+  }
+  .cover-foot .arrow {
+    font-family: var(--serif-display);
+    font-style: italic;
+    font-size: 1.4em;
+    opacity: 0.9;
+  }
+
+  /* ============ INTERIOR GRID ============ */
+  .spread {
+    flex: 0 0 auto;
+    display: grid;
+    grid-template-columns: 55fr 45fr;
+    column-gap: 6vw;
+    row-gap: 4vh;
+    align-items: start;
+    padding-top: 2vh;
+    position: relative;
+    z-index: 1;
+    width: 100%;
+  }
+
+  .col-left { min-width: 0; display: flex; flex-direction: column; }
+  .col-right {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    align-self: start;
+    justify-content: flex-start;
+    gap: 3.4vh;
+  }
+
+  .headline {
+    font-family: var(--serif-display);
+    font-weight: 600;
+    font-size: clamp(40px, 5.2vw, 100px);
+    line-height: 1.02;
+    letter-spacing: -0.022em;
+    margin: 0 0 2.4vh;
+    max-width: 14ch;
+  }
+  .headline em {
+    font-style: italic;
+    font-weight: 500;
+  }
+
+  .role-line {
+    font-family: var(--serif-display);
+    font-weight: 600;
+    font-size: clamp(19px, 1.75vw, 28px);
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+    margin: 0 0 0.45em;
+  }
+  .role-line + .role-line {
+    margin-top: 1.2vh;
+  }
+  .body-copy + .role-line {
+    margin-top: 3vh;
+  }
+
+  .dateline {
+    font-family: var(--mono);
+    font-size: clamp(11px, 0.92vw, 13px);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    opacity: 0.72;
+    margin-bottom: 2vh;
+  }
+
+  .body-copy {
+    font-family: var(--serif-body);
+    font-weight: 400;
+    font-size: clamp(16px, 1.35vw, 21px);
+    line-height: 1.52;
+    max-width: clamp(360px, 36vw, 540px);
+    margin: 0;
+  }
+  .body-copy p { margin: 0 0 1.1em; }
+  .body-copy p:last-child { margin-bottom: 0; }
+
+  .page:not(.dark) .body-copy { opacity: 0.88; }
+  .page.dark .body-copy { opacity: 0.86; }
+
+  /* Dense pages — when two role blocks share a spread, tighten everything */
+  .page.dense .headline {
+    font-size: clamp(36px, 4.4vw, 82px);
+    margin-bottom: 2vh;
+    max-width: 16ch;
+  }
+  .page.dense .role-line {
+    font-size: clamp(17px, 1.55vw, 24px);
+    margin-bottom: 0.35em;
+  }
+  .page.dense .role-line + .role-line {
+    margin-top: 1vh;
+  }
+  .page.dense .dateline {
+    margin-bottom: 1.6vh;
+    font-size: clamp(10.5px, 0.88vw, 12.5px);
+  }
+  .page.dense .body-copy {
+    font-size: clamp(15px, 1.22vw, 19px);
+    line-height: 1.5;
+  }
+  .page.dense .section-tag {
+    margin-bottom: 1.8vh;
+  }
+  .page.dense .subtle-link {
+    margin-top: 1.6vh;
+    font-size: clamp(10.5px, 0.88vw, 12.5px);
+  }
+
+  .subtle-link {
+    font-family: var(--mono);
+    font-size: clamp(11px, 0.95vw, 13px);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    display: inline-block;
+    margin-top: 2.6vh;
+    padding-bottom: 2px;
+    border-bottom: 1px solid currentColor;
+    opacity: 0.72;
+    text-decoration: none;
+    color: inherit;
+  }
+  .anchor-wrap .subtle-link {
+    margin-top: 0;
+    align-self: flex-start;
+  }
+
+  /* Right column: anchor datum */
+  .anchor-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 2.2vh;
+  }
+  .anchor {
+    font-family: var(--serif-display);
+    font-weight: 700;
+    font-size: clamp(84px, 7vw, 154px);
+    line-height: 0.92;
+    letter-spacing: -0.035em;
+    margin: 0;
+    word-break: break-word;
+  }
+  .anchor.phrase {
+    font-weight: 600;
+    font-style: italic;
+    letter-spacing: -0.022em;
+    font-size: clamp(62px, 6.6vw, 130px);
+  }
+  .anchor-label {
+    font-family: var(--mono);
+    font-size: clamp(11px, 0.9vw, 13px);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    opacity: 0.72;
+    max-width: 32ch;
+  }
+
+  .discipline-tag {
+    font-family: var(--mono);
+    font-size: clamp(10px, 0.8vw, 12px);
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    opacity: 0.7;
+    padding-top: 1.3vh;
+    border-top: 1px solid currentColor;
+    border-top-color: currentColor;
+    display: inline-block;
+    align-self: flex-start;
+  }
+
+  .callout {
+    border-left: 4px solid currentColor;
+    padding: 2.4vh 2.2vw;
+    background: var(--paper-dim);
+    display: flex;
+    flex-direction: column;
+    gap: 1.2vh;
+  }
+  .page.dark .callout { background: var(--ink-dim); }
+  .callout .callout-head {
+    font-family: var(--mono);
+    font-size: clamp(10px, 0.82vw, 12px);
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    opacity: 0.7;
+  }
+  .callout .callout-body {
+    font-family: var(--serif-body);
+    font-style: italic;
+    font-weight: 400;
+    font-size: clamp(15px, 1.15vw, 19px);
+    line-height: 1.5;
+    opacity: 0.85;
+    margin: 0;
+    max-width: 44ch;
+  }
+
+  /* Toolkit page specifics */
+  .toolkit-stacks {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.8vh;
+    margin: 1.4vh 0 2.2vh;
+    max-width: clamp(360px, 36vw, 540px);
+    width: 100%;
+  }
+  .toolkit-stack {
+    display: grid;
+    grid-template-columns: minmax(9em, 12em) 1fr;
+    column-gap: 2vw;
+    row-gap: 0.3em;
+    align-items: baseline;
+    border-top: 1px solid currentColor;
+    border-top-color: var(--hair-light);
+    padding-top: 1.1vh;
+  }
+  .page.dark .toolkit-stack { border-top-color: var(--hair-dark); }
+  .toolkit-stack .k {
+    font-family: var(--mono);
+    font-size: clamp(11px, 0.92vw, 13px);
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    opacity: 0.7;
+  }
+  .toolkit-stack .v {
+    font-family: var(--serif-body);
+    font-size: clamp(16px, 1.3vw, 20px);
+    line-height: 1.45;
+    opacity: 0.9;
+  }
+
+  .education-block {
+    margin-top: auto;
+    padding-top: 2vh;
+    border-top: 1px solid var(--hair-light);
+    display: flex;
+    flex-direction: column;
+    gap: 0.5em;
+  }
+  .page.dark .education-block { border-top-color: var(--hair-dark); }
+  .education-block .school {
+    font-family: var(--serif-display);
+    font-weight: 600;
+    font-size: clamp(18px, 1.55vw, 26px);
+    letter-spacing: -0.01em;
+    margin: 0;
+  }
+  .education-block .degree {
+    font-family: var(--serif-body);
+    font-size: clamp(15px, 1.2vw, 19px);
+    line-height: 1.4;
+    opacity: 0.88;
+    margin: 0;
+    max-width: 44ch;
+  }
+  .education-block .honors {
+    font-family: var(--mono);
+    font-size: clamp(11px, 0.88vw, 13px);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    opacity: 0.7;
+    margin-top: 0.4em;
+  }
+
+  /* ============ BACK COVER ============ */
+  .back {
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 12vh 8vw;
+  }
+  .back-mark {
+    position: absolute;
+    top: 3.4vh;
+    left: 6vw;
+    right: 6vw;
+    display: flex;
+    justify-content: space-between;
+    font-family: var(--mono);
+    font-size: clamp(10px, 0.78vw, 12px);
+    letter-spacing: 0.28em;
+    opacity: 0.6;
+    text-transform: uppercase;
+  }
+  .back-body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5vh;
+    max-width: 780px;
+    margin: 0 auto;
+  }
+  .back-closing {
+    font-family: var(--serif-display);
+    font-style: italic;
+    font-weight: 400;
+    font-size: clamp(34px, 4.8vw, 84px);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    margin: 0;
+  }
+  .back-rule {
+    width: 6em;
+    height: 1px;
+    background: currentColor;
+    opacity: 0.5;
+  }
+  .back-contact {
+    display: flex;
+    flex-direction: column;
+    gap: 1.4em;
+    font-family: var(--mono);
+    font-size: clamp(13px, 1.15vw, 17px);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    opacity: 0.88;
+  }
+  .back-contact a {
+    color: inherit;
+    text-decoration: none;
+    border-bottom: 1px solid rgba(244, 241, 234, 0.35);
+    padding-bottom: 2px;
+  }
+  .back-contact .k {
+    opacity: 0.55;
+    margin-right: 0.7em;
+  }
+  .back-foot {
+    position: absolute;
+    bottom: 4.2vh;
+    left: 6vw;
+    right: 6vw;
+    display: flex;
+    justify-content: space-between;
+    font-family: var(--mono);
+    font-size: clamp(10px, 0.78vw, 12px);
+    letter-spacing: 0.28em;
+    opacity: 0.55;
+    text-transform: uppercase;
+  }
+
+  /* ============ DOT NAV ============ */
+  .nav {
+    position: fixed;
+    bottom: max(2.6vh, 18px);
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 14px;
+    z-index: 20;
+    padding: 8px 10px;
+    border-radius: 999px;
+  }
+  .nav button {
+    all: unset;
+    width: 8px;
+    height: 8px;
+    border-radius: 999px;
+    background: var(--ink);
+    opacity: 0.25;
+    cursor: pointer;
+    transition: opacity 250ms ease, background 250ms ease, transform 250ms ease;
+    box-sizing: content-box;
+  }
+  body[data-dark="1"] .nav button { background: var(--paper); }
+  .nav button:hover { opacity: 0.55; }
+  .nav button:focus-visible {
+    outline: 1px solid currentColor;
+    outline-offset: 4px;
+  }
+  .nav button[aria-current="true"] {
+    opacity: 0.95;
+    transform: scale(1.35);
+  }
+
+  /* Keyboard hint, desktop only */
+  .kbd-hint {
+    position: fixed;
+    bottom: max(2.6vh, 18px);
+    right: max(2vw, 16px);
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    opacity: 0.4;
+    z-index: 20;
+    pointer-events: none;
+    color: var(--ink);
+  }
+  body[data-dark="1"] .kbd-hint { color: var(--paper); }
+
+  /* ============ RESPONSIVE ============ */
+  @media (max-width: 900px) {
+    .page { padding: 8vh 6vw 12vh; }
+    .spread {
+      grid-template-columns: 1fr;
+      row-gap: 4vh;
+      padding-top: 1vh;
+    }
+    .col-right {
+      justify-content: flex-start;
+      gap: 3vh;
+    }
+    .headline { font-size: clamp(40px, 8.5vw, 72px); max-width: 20ch; }
+    .anchor { font-size: clamp(64px, 16vw, 120px); }
+    .anchor.phrase { font-size: clamp(44px, 11vw, 90px); }
+    .ghost { font-size: clamp(180px, 46vw, 280px); bottom: -2vh; left: -3vw; }
+    .nameplate { font-size: clamp(56px, 14vw, 108px); }
+    .descriptor { font-size: clamp(20px, 4.6vw, 30px); max-width: 22ch; }
+    .cover-meta { font-size: clamp(11px, 3.2vw, 13px); }
+    .callout { padding: 2vh 5vw; }
+    .body-copy { max-width: 100%; }
+    .toolkit-stack { grid-template-columns: 1fr; }
+    .toolkit-stack .v { padding-top: 0.2em; }
+    .kbd-hint { display: none; }
+  }
+
+  @media (max-width: 480px) {
+    .runner .c { display: none; }
+    .nameplate { font-size: clamp(52px, 14vw, 82px); }
+    .headline { font-size: clamp(34px, 9vw, 58px); }
+    .back-closing { font-size: clamp(28px, 8.2vw, 48px); }
+  }
+
+
+  /* Selection */
+  ::selection { background: rgba(17,17,17,0.82); color: var(--paper); }
+  .page.dark ::selection { background: rgba(244,241,234,0.85); color: var(--ink); }
+</style>
+</head>
+<body data-dark="1">
+
+<main class="book" id="book" style="--page:0">
+
+  <!-- ===================== PAGE 1 — COVER ===================== -->
+  <section class="page dark cover" role="region" aria-label="Cover">
+    <div class="cover-mark">Vol. I &nbsp; · &nbsp; Spring 2026</div>
+    <div class="cover-mark-right">A Personal Profile</div>
+
+    <h1 class="nameplate">
+      <span class="break">Tanish</span>
+      <span class="break">Anandababu</span>
+    </h1>
+
+    <p class="descriptor">Software engineer. Researcher.</p>
+
+    <div class="cover-rule" aria-hidden="true"></div>
+
+    <div class="cover-meta">
+      <div>University of Maryland, College Park</div>
+      <div>Computer Science · Cybersecurity · Computational Finance</div>
+      <div>Graduating December 2026 &nbsp;/&nbsp; Full-time from January 2027</div>
+    </div>
+
+    <div class="cover-foot">
+      <span>Begin</span>
+      <span class="arrow">→</span>
+    </div>
+  </section>
+
+  <!-- ===================== PAGE 2 — IDENTITY ===================== -->
+  <section class="page" role="region" aria-label="Introduction">
+    <div class="runner">
+      <span class="l">Tanish Anandababu — Vol. I</span>
+      <span class="c">Introduction</span>
+      <span class="r">02 / 08</span>
+    </div>
+    <span class="ghost" aria-hidden="true">02</span>
+
+    <div class="spread">
+      <div class="col-left">
+        <span class="section-tag">Introduction / 01</span>
+        <h2 class="headline"><em>Between</em> disciplines, on purpose.</h2>
+        <div class="role-line">University of Maryland · B.S. Computer Science</div>
+        <div class="dateline">Dec 2026 · Minors in Advanced Cybersecurity, Computational Finance</div>
+        <div class="body-copy">
+          <p>I study computer science at Maryland, with minors in advanced cybersecurity and computational finance. Adversaries and capital are two of the places real systems get tested, and the minors are how I explore both.</p>
+          <p>Six roles so far - Google, Ernst &amp; Young, U.S. News, a computational biology lab at UMD, a maritime operations startup in Mumbai, and a first-author ACM paper on LLMs in mathematics education.</p>
+          <p>I'm drawn to projects where software has to answer to something outside itself, whether a car, a ship, a drug candidate, or a roomful of stakeholders. Cross-disciplinary work is what fascinates me.</p>
+        </div>
+      </div>
+      <div class="col-right">
+        <span class="discipline-tag">Profile</span>
+        <div class="anchor-wrap">
+          <div class="anchor">3.955</div>
+          <div class="anchor-label">Cumulative GPA · Dean's List F'23, S'24, F'24, S'25, F'25</div>
+        </div>
+        <div class="callout">
+          <div class="callout-head">How I work</div>
+          <p class="callout-body">Computational biology, cybersecurity consulting, maritime operations. Different constraints, different goals, different rules of the room. The skill I lean on most is learning those rules quickly and adapting my engineering to fit.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== PAGE 3 — GOOGLE ===================== -->
+  <section class="page dark" role="region" aria-label="Google — Android Auto">
+    <div class="runner">
+      <span class="l">Experience · Google LLC</span>
+      <span class="c">Incoming</span>
+      <span class="r">03 / 08</span>
+    </div>
+    <span class="ghost" aria-hidden="true">03</span>
+
+    <div class="spread">
+      <div class="col-left">
+        <span class="section-tag">Experience / 02</span>
+        <h2 class="headline">On-device, <em>on the road.</em></h2>
+        <div class="role-line">Software Engineering Intern · Google LLC</div>
+        <div class="dateline">San Jose, CA · May — August 2026</div>
+        <div class="body-copy">
+          <p>Joining the Android Auto team to develop on-device AI-powered features for the Android Auto ecosystem - a surface where latency, safety, and ambient context all arrive at once and none of them can be traded off.</p>
+        </div>
+      </div>
+      <div class="col-right">
+        <span class="discipline-tag">Industry · AI Systems</span>
+        <div class="anchor-wrap">
+          <div class="anchor phrase">Android Auto</div>
+          <div class="anchor-label">Domain focus — on&#8209;device AI for automotive</div>
+        </div>
+        <div class="callout">
+          <div class="callout-head">Why this matters</div>
+          <p class="callout-body">On-device AI is where the next decade of ambient computing gets decided. The car is the hardest surface to get right - no margin for latency, no tolerance for hallucination, constant environmental context. Incoming.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== PAGE 4 — ERNST & YOUNG ===================== -->
+  <section class="page" role="region" aria-label="Ernst and Young — Agentic AI">
+    <div class="runner">
+      <span class="l">Experience · Ernst &amp; Young U.S. LLP</span>
+      <span class="c">Agentic AI</span>
+      <span class="r">04 / 08</span>
+    </div>
+    <span class="ghost" aria-hidden="true">04</span>
+
+    <div class="spread">
+      <div class="col-left">
+        <span class="section-tag">Experience / 03</span>
+        <h2 class="headline">An agent that <em>reviews</em> the reviewers.</h2>
+        <div class="role-line">Cybersecurity Technology Consulting Intern · Ernst &amp; Young U.S. LLP</div>
+        <div class="dateline">New York, NY · June — August 2025</div>
+        <div class="body-copy">
+          <p>Built an end-to-end agentic AI pipeline for the cybersecurity practice - a knowledge base for secure document retrieval paired with a critique agent that returned actionable feedback and revision suggestions on cybersecurity documentation.</p>
+          <p>Designed for reuse, the pattern scales across teams and engagements. Demoed directly to the external client and to senior managers and partners inside the practice.</p>
+        </div>
+      </div>
+      <div class="col-right">
+        <span class="discipline-tag">Agentic AI · Cybersecurity</span>
+        <div class="anchor-wrap">
+          <div class="anchor">~$17,500</div>
+          <div class="anchor-label">Est. saved per 100 documents · ~175 hours of manual review</div>
+        </div>
+        <div class="callout">
+          <div class="callout-head">What I learned</div>
+          <p class="callout-body">An agentic system is only as useful as the trust it commands. The technical architecture was complex, but the real bottleneck was the review loop. The software had to answer directly to senior practitioners and external clients, proving it could critique securely and accurately.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== PAGE 5 — PRODUCT: U.S. NEWS + VOLTEO ===================== -->
+  <section class="page dark dense" role="region" aria-label="Product engineering at U.S. News and Volteo">
+    <div class="runner">
+      <span class="l">Experience · U.S. News &amp; World Report · Volteo Maritime</span>
+      <span class="c">Product</span>
+      <span class="r">05 / 08</span>
+    </div>
+    <span class="ghost" aria-hidden="true">05</span>
+
+    <div class="spread">
+      <div class="col-left">
+        <span class="section-tag">Experience / 04</span>
+        <h2 class="headline"><em>Listening,</em> then shipping.</h2>
+        <div class="role-line">U.S. News &amp; World Report · Software Engineer (Contract)</div>
+        <div class="dateline">College Park, MD · September 2024 — June 2025</div>
+        <div class="body-copy">
+          <p>At U.S. News - engineered a data-validation and QA platform over the internal API, leveraging advanced heuristics and data analysis to flag anomalies and tighten editorial quality. Designed and executed API optimizations that reduced response times by over 50% for endpoints handling large data extractions. Built React interfaces with Flask and Jupyter pipelines, and long-horizon metric visualizations to inform decision-making.</p>
+        </div>
+        <div class="role-line">Volteo Maritime · Software Engineer Intern</div>
+        <div class="dateline">Mumbai, India · June — August 2024</div>
+        <div class="body-copy">
+          <p>At Volteo - shipped the Wayship vessel operations platform's most-requested dark mode end-to-end, grounded in user research with ship captains. 40% user satisfaction lift, 60% more nighttime usage.</p>
+        </div>
+      </div>
+      <div class="col-right">
+        <span class="discipline-tag">Product · React · Pipelines</span>
+        <div class="anchor-wrap">
+          <div class="anchor">50%</div>
+          <div class="anchor-label">API latency reduced · large-extraction endpoints</div>
+        </div>
+        <div class="callout">
+          <div class="callout-head">How I approach product work</div>
+          <p class="callout-body">Product engineering is mostly listening. Volteo's dark mode came from talking to ship captains. The U.S. News QA platform came from understanding what editorial teams were already flagging by hand. The code is the second half.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== PAGE 6 — RESEARCH ===================== -->
+  <section class="page dense" role="region" aria-label="Research at the Klauda Lab and FIRE">
+    <div class="runner">
+      <span class="l">Research · Klauda Lab · FIRE, UMD</span>
+      <span class="c">Computational Biology · Responsible Computing</span>
+      <span class="r">06 / 08</span>
+    </div>
+    <span class="ghost" aria-hidden="true">06</span>
+
+    <div class="spread">
+      <div class="col-left">
+        <span class="section-tag">Research / 05</span>
+        <h2 class="headline">From membranes <em>to models.</em></h2>
+        <div class="role-line">Klauda Lab, UMD · Machine Learning Engineer / Research Assistant</div>
+        <div class="dateline">College Park, MD · September 2024 — Present</div>
+        <div class="role-line">FIRE, UMD · Undergraduate Researcher</div>
+        <div class="dateline">College Park, MD · January 2024 — February 2025</div>
+        <div class="body-copy">
+          <p>Research under Dr. Jeffery Klauda at the Laboratory of Molecular and Thermodynamic Modeling. Studying how ligands alter the conformational dynamics of EAG1, a voltage-gated potassium channel overexpressed in several cancers. Built a config-driven Python pipeline on UMD's Zaratan HPC cluster that processes MD frames across several simulations, using dihedral-angle clustering and PCA. Collaborating with postdoctoral researchers at Georgetown Medical Center on EAG1 as a live anticancer drug target.</p>
+          <p>At FIRE - first author of <em>“Evaluating Large Language Models in Undergraduate Mathematics: Balancing Potentials and Pitfalls,”</em> accepted by the ACM Journal of Responsible Computing.</p>
+        </div>
+      </div>
+      <div class="col-right">
+        <span class="discipline-tag">Computational Biology · Statistical Modeling</span>
+        <div class="anchor-wrap">
+          <div class="anchor phrase">First author</div>
+          <div class="anchor-label">ACM Journal of Responsible Computing · 2024</div>
+          <a class="subtle-link" href="https://dl.acm.org/doi/10.1145/3746285" target="_blank" rel="noopener">Read in ACM — 10.1145/3746285 ↗</a>
+        </div>
+        <div class="callout">
+          <div class="callout-head">Why this mattered</div>
+          <p class="callout-body">Research teaches a discipline I can't get from shipping alone: the precision of a claim. Whether it's membrane dynamics on HPC or LLM accuracy on undergraduate proofs, the question is always the same - what exactly does the evidence let me say?</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== PAGE 7 — TOOLKIT + EDUCATION ===================== -->
+  <section class="page dense" role="region" aria-label="Toolkit and Education">
+    <div class="runner">
+      <span class="l">Toolkit · Education</span>
+      <span class="c">Discipline Map</span>
+      <span class="r">07 / 08</span>
+    </div>
+    <span class="ghost" aria-hidden="true">07</span>
+
+    <div class="spread">
+      <div class="col-left">
+        <span class="section-tag">Toolkit / 06</span>
+        <h2 class="headline">The stack is <em>wide</em><br/>because the problems are.</h2>
+        <div class="toolkit-stacks">
+          <div class="toolkit-stack">
+            <div class="k">Languages</div>
+            <div class="v">Java · JavaScript · TypeScript · Python · R · C · x86 Assembly · SQL</div>
+          </div>
+          <div class="toolkit-stack">
+            <div class="k">Frameworks &amp; Tools</div>
+            <div class="v">React.js · Node.js · Next.js · Git · Docker · Jupyter · Figma</div>
+          </div>
+          <div class="toolkit-stack">
+            <div class="k">Cybersecurity</div>
+            <div class="v">NIST &amp; ISO standards · MITRE ATT&amp;CK · SIEM · SOAR · Security architecture &amp; strategy</div>
+          </div>
+        </div>
+
+      </div>
+      <div class="col-right">
+        <span class="discipline-tag">Discipline Map</span>
+        <div class="anchor-wrap">
+          <div class="anchor">8</div>
+          <div class="anchor-label">Languages I work in · systems, web, ML</div>
+        </div>
+        <div class="callout">
+          <div class="callout-head">How I pick up tools</div>
+          <p class="callout-body">I don't collect tools; I pick them up when a problem asks for one. Every language on this list is here because a project needed it. When the next project asks for something I haven't used, I'll learn that too.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== PAGE 8 — BACK COVER ===================== -->
+  <section class="page dark back" role="region" aria-label="Back cover and contact">
+    <div class="back-mark">
+      <span>Tanish Anandababu — Vol. I</span>
+      <span>Get in touch</span>
+    </div>
+
+    <div class="back-body">
+      <div class="meta quiet">In closing</div>
+      <h2 class="back-closing">Writing, reading, <em>shipping.</em><br/>Always in.</h2>
+      <div class="back-rule" aria-hidden="true"></div>
+      <div class="back-contact">
+        <div><span class="k">Email —</span><a href="mailto:tanishanand2106@gmail.com">tanishanand2106@gmail.com</a></div>
+        <div><span class="k">LinkedIn —</span><a href="https://www.linkedin.com/in/tanish-anandababu/" target="_blank" rel="noopener">in / tanish-anandababu</a></div>
+      </div>
+    </div>
+
+    <div class="back-foot">
+      <span>Tanish Anandababu · © 2026</span>
+      <span>Fin.</span>
+    </div>
+  </section>
+
+</main>
+
+<nav class="nav" id="nav" aria-label="Page navigation"></nav>
+<div class="kbd-hint" id="kbdHint">← → ↑ ↓  ·  scroll  ·  swipe</div>
+
+<script>
+(function () {
+  'use strict';
+
+  const book = document.getElementById('book');
+  const nav = document.getElementById('nav');
+  const body = document.body;
+  const pages = Array.from(document.querySelectorAll('.page'));
+  const total = pages.length;
+
+  let current = 0;
+  let isAnimating = false;
+  let animTimer = null;
+
+  const ANIM_MS = matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 720;
+
+  // Build dot nav
+  const dots = [];
+  for (let i = 0; i < total; i++) {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.setAttribute('aria-label', `Go to page ${i + 1} of ${total}`);
+    b.dataset.index = String(i);
+    b.addEventListener('click', () => goTo(i));
+    nav.appendChild(b);
+    dots.push(b);
+  }
+
+  function syncDarkMode() {
+    const isDark = pages[current].classList.contains('dark');
+    body.dataset.dark = isDark ? '1' : '0';
+  }
+
+  function syncDots() {
+    dots.forEach((d, i) => {
+      if (i === current) d.setAttribute('aria-current', 'true');
+      else d.removeAttribute('aria-current');
+    });
+  }
+
+  function goTo(n) {
+    const next = Math.max(0, Math.min(total - 1, n));
+    if (next === current || isAnimating) return;
+    current = next;
+    book.style.setProperty('--page', String(current));
+    syncDots();
+    syncDarkMode();
+    isAnimating = true;
+    clearTimeout(animTimer);
+    animTimer = setTimeout(() => { isAnimating = false; }, ANIM_MS + 40);
+  }
+
+  // Init
+  syncDots();
+  syncDarkMode();
+
+  // ----- Keyboard -----
+  // All scroll-ish keys page through the magazine.
+  window.addEventListener('keydown', (e) => {
+    const k = e.key;
+    if (k === 'ArrowRight' || k === 'ArrowDown' || k === 'PageDown' || k === ' ') { e.preventDefault(); goTo(current + 1); }
+    else if (k === 'ArrowLeft' || k === 'ArrowUp' || k === 'PageUp') { e.preventDefault(); goTo(current - 1); }
+    else if (k === 'Home') { e.preventDefault(); goTo(0); }
+    else if (k === 'End') { e.preventDefault(); goTo(total - 1); }
+  });
+
+  // ----- Wheel -----
+  // Any wheel input (horizontal or vertical) advances pages.
+  let wheelAccum = 0;
+  let wheelResetT = null;
+  const WHEEL_THRESHOLD = 60;
+  window.addEventListener('wheel', (e) => {
+    e.preventDefault();
+    const dx = e.deltaX;
+    const dy = e.deltaY;
+    // Dominant axis; vertical scroll-down maps to forward (next page)
+    const delta = Math.abs(dx) > Math.abs(dy) ? dx : dy;
+    if (isAnimating) return;
+    wheelAccum += delta;
+    if (Math.abs(wheelAccum) >= WHEEL_THRESHOLD) {
+      const dir = wheelAccum > 0 ? 1 : -1;
+      wheelAccum = 0;
+      goTo(current + dir);
+    }
+    clearTimeout(wheelResetT);
+    wheelResetT = setTimeout(() => { wheelAccum = 0; }, 160);
+  }, { passive: false });
+
+  // ----- Touch / Pointer swipe -----
+  let pStart = null;
+  let pMoved = false;
+  const SWIPE_THRESHOLD = 55;
+
+  book.addEventListener('pointerdown', (e) => {
+    if (e.pointerType === 'mouse' && e.button !== 0) return;
+    pStart = { x: e.clientX, y: e.clientY, t: Date.now() };
+    pMoved = false;
+  });
+
+  book.addEventListener('pointermove', (e) => {
+    if (!pStart) return;
+    const dx = e.clientX - pStart.x;
+    const dy = e.clientY - pStart.y;
+    if (Math.abs(dx) > 8 || Math.abs(dy) > 8) pMoved = true;
+  });
+
+  function endSwipe(e) {
+    if (!pStart) return;
+    const dx = e.clientX - pStart.x;
+    const dy = e.clientY - pStart.y;
+    const dt = Date.now() - pStart.t;
+    pStart = null;
+    if (dt > 900) return;
+    // Use dominant axis — any swipe turns the page
+    const delta = Math.abs(dx) > Math.abs(dy) ? dx : dy;
+    if (Math.abs(delta) < SWIPE_THRESHOLD) return;
+    if (delta < 0) goTo(current + 1);
+    else goTo(current - 1);
+  }
+  book.addEventListener('pointerup', endSwipe);
+  book.addEventListener('pointercancel', () => { pStart = null; });
+
+  // Prevent the occasional click-drag from selecting text across pages
+  book.addEventListener('dragstart', (e) => e.preventDefault());
+
+  // Keep things honest on resize — no layout drift
+  let resizeT = null;
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeT);
+    resizeT = setTimeout(() => { book.style.setProperty('--page', String(current)); }, 60);
+  });
+
+  // Hash-based entry (optional): #p=3 opens on page 3
+  const m = location.hash.match(/p=(\d+)/);
+  if (m) {
+    const idx = Math.max(0, Math.min(total - 1, parseInt(m[1], 10) - 1));
+    if (idx !== 0) {
+      // set without animation on first paint
+      book.style.transition = 'none';
+      requestAnimationFrame(() => {
+        current = idx;
+        book.style.setProperty('--page', String(current));
+        syncDots();
+        syncDarkMode();
+        requestAnimationFrame(() => { book.style.transition = ''; });
+      });
+    }
+  }
+})();
+</script>
+</body>
+</html>
